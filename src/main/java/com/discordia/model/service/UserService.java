@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -36,11 +37,11 @@ public class UserService {
     }
 
     public void deleteUser(String id){
-        repository.deleteById(Long.parseLong(id));
+        repository.deleteById(UUID.fromString(id));
     }
 
     public User update(User user, String id){
-        Optional<User> optional = repository.findById(Long.parseLong(id));
+        Optional<User> optional = repository.findById(UUID.fromString(id));
 
         if (optional.isPresent()){
             User db = optional.get();
