@@ -8,15 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.security.core.GrantedAuthority;
 
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "role")
-public class Role implements GrantedAuthority {
+@Table(name = "room_image")
+public class RoomImage {
 
     @Id
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
@@ -25,10 +24,10 @@ public class Role implements GrantedAuthority {
     @Column(columnDefinition = "uuid")
     private UUID id;
 
-    private String name;
+    @OneToOne
+    @JoinColumn(name = "id_room")
+    private Room room;
 
-    @Override
-    public String getAuthority() {
-        return name;
-    }
+    @Column(name = "path_img")
+    private String pathImg;
 }

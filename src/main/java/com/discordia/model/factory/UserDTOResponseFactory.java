@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDTOResponseFactory {
 
-    public UserRegistryDTOResponse userToResponse(User user){
+    public UserRegistryDTOResponse userToResponse(User user) {
         return UserRegistryDTOResponse.builder()
                 .name(user.getName())
                 .password(user.getPassword())
@@ -16,7 +16,7 @@ public class UserDTOResponseFactory {
                 .build();
     }
 
-    public User toUser(UserDTO dto){
+    public User toUser(UserDTO dto) {
         return User.builder()
                 .name(dto.getName())
                 .password(dto.getPassword())

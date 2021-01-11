@@ -1,5 +1,11 @@
 package com.discordia.model.service;
 
+import com.discordia.model.dto.RoomImageDTOResponse;
+import com.discordia.model.entity.Room;
+import com.discordia.model.entity.RoomImage;
+import com.discordia.model.repository.RoomImageRepository;
+import com.discordia.model.repository.RoomRepository;
+import com.discordia.utils.InitializationUtils;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Acl;
 import com.google.cloud.storage.Blob;
@@ -7,22 +13,21 @@ import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.StorageClient;
-import com.discordia.model.entity.Room;
-import com.discordia.model.repository.RoomRepository;
-import com.discordia.utils.InitializationUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
+import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Base64;
-
 @Service
 public class FirebaseStorageService {
 
-    @Autowired private RoomRepository repository;
+    @Autowired private RoomImageRepository roomImageRepository;
+    @Autowired private RoomRepository roomRepository;
     @Autowired private InitializationUtils initializationUtils;
 
     public String upload(String fName, String mimiType, MultipartFile file) throws IOException {
@@ -39,13 +44,24 @@ public class FirebaseStorageService {
         return String.format(initializationUtils.getStorageGoogleApis(), bucket.getName(), fName);
     }
 
-    public String uploadDatabase(String fName, String mimiType, MultipartFile file)
-            throws IOException {
+    public RoomImageDTOResponse uploadDatabase(
+            String fName, String mimiType, MultipartFile file, String idRoom) throws IOException {
+
+        Optional<Room> room = roomRepository.findById(UUID.fromString(idRoom));
+
+        if (!room.isPresent()) throw new RuntimeException("Could not find any room.");
 
         Bucket bucket = StorageClient.getInstance().bucket();
+        byte[] bytes = file.getBytes();
 
-        Room room =
-                Room.builder()
+        Blob blob = bucket.create(fName, bytes, mimiType);
+
+        // URL public
+        blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+
+        RoomImage roomImage =
+                RoomImage.builder()
+                        .room(room.get())
                         .pathImg(
                                 String.format(
                                         initializationUtils.getStorageGoogleApis(),
@@ -53,9 +69,16 @@ public class FirebaseStorageService {
                                         fName))
                         .build();
 
-        repository.save(room);
+        roomImageRepository.save(roomImage);
 
-        return Base64.getEncoder().encodeToString(file.getBytes());
+        return RoomImageDTOResponse.builder()
+                .base64(Base64.getEncoder().encodeToString(file.getBytes()))
+                .url(
+                        String.format(
+                                initializationUtils.getStorageGoogleApis(),
+                                bucket.getName(),
+                                fName))
+                .build();
     }
 
     @PostConstruct

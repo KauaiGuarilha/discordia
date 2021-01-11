@@ -2,19 +2,18 @@ package com.discordia.model.service;
 
 import com.discordia.model.entity.User;
 import com.discordia.model.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     @Autowired private UserRepository repository;
 
-    public User saveUser(User use){
+    public User saveUser(User use) {
         try {
             User userSave = repository.save(use);
             return userSave;
@@ -23,7 +22,7 @@ public class UserService {
         }
     }
 
-    public User returnUser(String userName){
+    public User returnUser(String userName) {
         try {
             User user = repository.findByUser(userName);
             return user;
@@ -32,18 +31,18 @@ public class UserService {
         }
     }
 
-    public List<User> returnListUser(){
+    public List<User> returnListUser() {
         return repository.findAll();
     }
 
-    public void deleteUser(String id){
+    public void deleteUser(String id) {
         repository.deleteById(UUID.fromString(id));
     }
 
-    public User update(User user, String id){
+    public User update(User user, String id) {
         Optional<User> optional = repository.findById(UUID.fromString(id));
 
-        if (optional.isPresent()){
+        if (optional.isPresent()) {
             User db = optional.get();
             db.setName(user.getName());
             db.setPassword(user.getPassword());

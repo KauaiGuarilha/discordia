@@ -1,7 +1,15 @@
 package com.discordia.controller;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.discordia.model.service.FirebaseStorageService;
 import io.restassured.internal.util.IOUtils;
+import java.io.FileInputStream;
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,15 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 public class UploadControllerTest {
@@ -61,7 +60,11 @@ public class UploadControllerTest {
 
         doReturn("Test")
                 .when(service)
-                .uploadDatabase(any(String.class), any(String.class), any(MultipartFile.class));
+                .uploadDatabase(
+                        any(String.class),
+                        any(String.class),
+                        any(MultipartFile.class),
+                        any(String.class));
 
         mockMvc.perform(
                         multipart("/upload/save-path")

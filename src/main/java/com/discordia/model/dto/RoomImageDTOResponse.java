@@ -1,6 +1,5 @@
 package com.discordia.model.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoomsDTOResponse {
+public class RoomImageDTOResponse {
 
-    private String username;
-    private List<RoomDTOResponse> rooms;
+    private String url;
+    private String base64;
 }

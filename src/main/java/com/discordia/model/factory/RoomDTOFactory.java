@@ -5,7 +5,7 @@ import com.discordia.model.entity.Room;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RoomDTOResponseFactory {
+public class RoomDTOFactory {
 
     public RoomDTOResponse dtoToResponse(Room dto) {
         return RoomDTOResponse.builder()

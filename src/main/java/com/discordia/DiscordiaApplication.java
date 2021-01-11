@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DiscordiaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DiscordiaApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(DiscordiaApplication.class, args);
+    }
 }

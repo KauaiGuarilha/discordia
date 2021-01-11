@@ -1,5 +1,9 @@
 package com.discordia.model.entity;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,18 +13,13 @@ import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "User")
-public class User implements UserDetails{
+@Table(name = "user_entity")
+public class User implements UserDetails {
 
     @Id
     @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
@@ -54,7 +53,7 @@ public class User implements UserDetails{
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
